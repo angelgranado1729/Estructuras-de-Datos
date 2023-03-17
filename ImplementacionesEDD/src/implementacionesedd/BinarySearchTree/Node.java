@@ -1,5 +1,4 @@
 package implementacionesedd.BinarySearchTree;
-
 public class Node<T> {
 
     private T data;
@@ -48,3 +47,4 @@ public class Node<T> {
     }
 
 }
+

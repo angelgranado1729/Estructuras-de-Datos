@@ -1,8 +1,10 @@
 package implementacionesedd.BinarySearchTree;
 
 public class BinarySearchTree<T> {
+
     // Esto es para poder hacer callouts
     public interface utilMethods<T> {
+
         boolean areEqual(T a, T b);
 
         boolean isLessThan(T a, T b);
@@ -12,6 +14,7 @@ public class BinarySearchTree<T> {
 
     // Metodos default para comparar
     public class methods implements utilMethods<T> {
+
         @Override
         public boolean areEqual(T a, T b) {
             return a.hashCode() == b.hashCode();
@@ -84,7 +87,8 @@ public class BinarySearchTree<T> {
     }
 
     public String preOrder() {
-        return this.preOrder(this.root, "");
+        String result = this.preOrder(this.root, "");
+        return result.substring(0, result.length() - 2);
     }
 
     private String inOrder(Node<T> pRoot, String path) {
@@ -101,7 +105,8 @@ public class BinarySearchTree<T> {
     }
 
     public String inOrder() {
-        return this.inOrder(this.root, "");
+        String result = this.inOrder(this.root, "");
+        return result.substring(0, result.length() - 2);
     }
 
     private String postOrder(Node<T> pRoot, String path) {
@@ -118,7 +123,8 @@ public class BinarySearchTree<T> {
     }
 
     public String postOrder() {
-        return this.postOrder(this.root, "");
+        String result = this.postOrder(this.root, "");
+        return result.substring(0, result.length() - 2);
     }
 
     // Busca el nodo padre de un nuevo dato a insertar
@@ -142,6 +148,47 @@ public class BinarySearchTree<T> {
         return found;
     }
 
+    private Node<T> searchParentNode(T data, Node<T> pRoot) {
+        Node<T> found = null;
+        if (pRoot != null) {
+            if (this.methods.isLessThan(data, pRoot.getData())) {
+                if (pRoot.getLeft() != null) {
+                    if (this.methods.areEqual(data, pRoot.getLeft().getData())) {
+                        return pRoot;
+                    } else {
+                        found = this.searchParentNode(data, pRoot.getLeft());
+                    }
+                } else {
+                    return null;
+                }
+            }
+            if (this.methods.isGreaterThan(data, pRoot.getData())) {
+                if (this.methods.isGreaterThan(data, pRoot.getData())) {
+                    if (pRoot.getRight() != null) {
+                        if (this.methods.areEqual(data, pRoot.getRight().getData())) {
+                            return pRoot;
+                        } else {
+                            found = this.searchParentNode(data, pRoot.getRight());
+                        }
+                    } else {
+                        return null;
+                    }
+                }
+            }
+            if (this.methods.areEqual(data, pRoot.getData())) {
+                return pRoot;
+            }
+        }
+        return found;
+    }
+
+    public Node<T> searchParentNode(T data) {
+        if (this.contains(data)) {
+            return this.searchParentNode(data, this.root);
+        }
+        return new Node<T>();
+    }
+
     public void add(T data) {
         if (this.isEmpty()) {
             this.root = new Node<>(data);
@@ -159,10 +206,10 @@ public class BinarySearchTree<T> {
         }
     }
 
-    public Node<T> search(Node<T> pRoot, T data){
+    public Node<T> search(Node<T> pRoot, T data) {
         if (pRoot == null) {
             return null;
-        } else{
+        } else {
             if (this.methods.areEqual(data, pRoot.getData())) {
                 return pRoot;
             } else if (this.methods.isLessThan(data, pRoot.getData())) {
@@ -174,36 +221,36 @@ public class BinarySearchTree<T> {
     }
 
     // Buscar el nodo mas pequeño de un subarbol
-    public Node<T> maxLeft(Node<T> pRoot){
-        if (pRoot.getRight() == null){
+    public Node<T> maxLeft(Node<T> pRoot) {
+        if (pRoot.getRight() == null) {
             return pRoot;
         }
         return this.maxLeft(pRoot.getRight());
-    
+
     }
 
-    private Node<T> delete(Node<T> pRoot, T data){
-        if (pRoot == null){
+    private Node<T> delete(Node<T> pRoot, T data) {
+        if (pRoot == null) {
             return null;
-        } else{
+        } else {
             //Si es menor, buscar en el subarbol izquierdo
-            if (this.methods.isLessThan(data, pRoot.getData())){
+            if (this.methods.isLessThan(data, pRoot.getData())) {
                 pRoot.setLeft(this.delete(pRoot.getLeft(), data));
-            //Si es mayor, buscar en el subarbol derecho
-            } else if (this.methods.isGreaterThan(data, pRoot.getData())){
+                //Si es mayor, buscar en el subarbol derecho
+            } else if (this.methods.isGreaterThan(data, pRoot.getData())) {
                 pRoot.setRight(this.delete(pRoot.getRight(), data));
-            //Si es igual, eliminar el nodo
-            } else{
+                //Si es igual, eliminar el nodo
+            } else {
                 //caso1: es una hoja
-                if (pRoot.getLeft() == null && pRoot.getRight() == null){
+                if (pRoot.getLeft() == null && pRoot.getRight() == null) {
                     pRoot = null;
-                //caso2: tiene un solo hijo
-                } else if (pRoot.getLeft() == null){
+                    //caso2: tiene un solo hijo
+                } else if (pRoot.getLeft() == null) {
                     pRoot = pRoot.getRight();
-                } else if (pRoot.getRight() == null){
+                } else if (pRoot.getRight() == null) {
                     pRoot = pRoot.getLeft();
-                //caso3: tiene dos hijos
-                } else{
+                    //caso3: tiene dos hijos
+                } else {
                     Node<T> maxLeft = this.maxLeft(pRoot.getLeft());
                     pRoot.setData(maxLeft.getData());
                     pRoot.setLeft(this.delete(pRoot.getLeft(), maxLeft.getData()));
@@ -214,14 +261,14 @@ public class BinarySearchTree<T> {
         }
     }
 
-    public void delete(T data){
+    public void delete(T data) {
         this.delete(this.root, data);
     }
 
-    private void printTree(Node<T> pRoot, int level){
-        if (pRoot != null){
+    private void printTree(Node<T> pRoot, int level) {
+        if (pRoot != null) {
             this.printTree(pRoot.getRight(), level + 1);
-            for (int i = 0; i < level; i++){
+            for (int i = 0; i < level; i++) {
                 System.out.print("   ");
             }
             System.out.println(pRoot.getData());
@@ -229,93 +276,126 @@ public class BinarySearchTree<T> {
         }
     }
 
-    public void printTree(){
+    public void printTree() {
         this.printTree(this.root, 0);
     }
 
-    public boolean isLeaf(Node<T> pRoot){
+    public boolean isLeaf(Node<T> pRoot) {
         return pRoot.getLeft() == null && pRoot.getRight() == null;
     }
 
-    public int height(Node<T> pRoot){
-        if (pRoot == null){
+    public int height(Node<T> pRoot) {
+        if (pRoot == null) {
             return 0;
-        } else{
+        } else {
             return 1 + Math.max(this.height(pRoot.getLeft()), this.height(pRoot.getRight()));
         }
     }
 
-    public int height(){
+    public int height() {
         return this.height(this.root);
     }
 
-    public int countNodes(Node<T> pRoot){
-        if (pRoot == null){
+    public int countNodes(Node<T> pRoot) {
+        if (pRoot == null) {
             return 0;
-        } else{
+        } else {
             return 1 + this.countNodes(pRoot.getLeft()) + this.countNodes(pRoot.getRight());
         }
     }
 
-    public int countNodes(){
+    public int countNodes() {
         return this.countNodes(this.root);
     }
 
-    public int countLeaves(Node<T> pRoot){
-        if (pRoot == null){
+    public int countLeaves(Node<T> pRoot) {
+        if (pRoot == null) {
             return 0;
-        } else if (this.isLeaf(pRoot)){
+        } else if (this.isLeaf(pRoot)) {
             return 1;
-        } else{
+        } else {
             return this.countLeaves(pRoot.getLeft()) + this.countLeaves(pRoot.getRight());
         }
     }
 
-    public int countLeaves(){
+    public int countLeaves() {
         return this.countLeaves(this.root);
     }
 
-    private boolean isBalanced(Node<T> pRoot){
-        if (pRoot == null){
+    private boolean isBalanced(Node<T> pRoot) {
+        if (pRoot == null) {
             return true;
-        } else{
+        } else {
             int leftHeight = this.height(pRoot.getLeft());
             int rightHeight = this.height(pRoot.getRight());
             return Math.abs(leftHeight - rightHeight) <= 1 && this.isBalanced(pRoot.getLeft()) && this.isBalanced(pRoot.getRight());
         }
     }
 
-    public boolean isBalanced(){
+    public boolean isBalanced() {
         return this.isBalanced(this.root);
     }
 
-    private boolean isComplete(Node<T> pRoot, int index, int count){
-        if (pRoot == null){
+    private boolean isComplete(Node<T> pRoot, int index, int count) {
+        if (pRoot == null) {
             return true;
-        } else if (index >= count){
+        } else if (index >= count) {
             return false;
-        } else{
+        } else {
             return this.isComplete(pRoot.getLeft(), 2 * index + 1, count) && this.isComplete(pRoot.getRight(), 2 * index + 2, count);
         }
     }
 
-    public boolean isComplete(){
+    public boolean isComplete() {
         int count = this.countNodes();
         return this.isComplete(this.root, 0, count);
     }
 
-    public boolean contains(T data){
+    public boolean contains(T data) {
         return this.search(this.root, data) != null;
     }
 
-    public void clear(){
+    public void clear() {
         this.root = null;
     }
 
-    public Node<T> search(T data){
+    public int level(T data) {
+        return this.level(this.root, data, 0);
+    }
+
+    private int level(Node<T> pRoot, T data, int level) {
+        if (pRoot == null) {
+            return -1;
+        } else if (this.methods.areEqual(data, pRoot.getData())) {
+            return level;
+        } else {
+            int leftLevel = this.level(pRoot.getLeft(), data, level + 1);
+            if (leftLevel != -1) {
+                return leftLevel;
+            } else {
+                return this.level(pRoot.getRight(), data, level + 1);
+            }
+        }
+    }
+
+    public Node<T> search(T data) {
         return this.search(this.root, data);
     }
 
+    public String ancestros(T data) {
+        return this.ancestros(this.root, data).substring(0, this.ancestros(this.root, data).length() - 1);
+    }
 
-
+    private String ancestros(Node<T> pRoot, T data) {
+        if (pRoot == null) {
+            return "";
+        } else if (this.methods.areEqual(data, pRoot.getData())) {
+            return "";
+        } else if (this.methods.isLessThan(data, pRoot.getData())) {
+            return pRoot.getData() + "," + this.ancestros(pRoot.getLeft(), data);
+        } else {
+            return pRoot.getData() + "," + this.ancestros(pRoot.getRight(), data);
+        }
+    }
 }
+
