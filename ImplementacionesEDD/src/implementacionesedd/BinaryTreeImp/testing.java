@@ -48,6 +48,8 @@ public class testing {
         System.out.println("Preorden " + tree.preOrder());
         // tree.printTree(tree.getRoot());
 
+        System.out.println("");
+        tree.printTree();
 
         
     }

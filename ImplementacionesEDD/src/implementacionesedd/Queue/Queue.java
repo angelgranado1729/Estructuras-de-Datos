@@ -101,7 +101,7 @@ public class Queue<T> {
      * @param tInfo informacion a almacenar
      */
     public void enqueue(T tInfo) {
-        Node<T> newNodo = new Node(tInfo);
+        Node<T> newNodo = new Node<>(tInfo);
         if (isEmpty()) {
             front = newNodo;
         } else {

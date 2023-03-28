@@ -265,21 +265,6 @@ public class BinarySearchTree<T> {
         this.delete(this.root, data);
     }
 
-    private void printTree(Node<T> pRoot, int level) {
-        if (pRoot != null) {
-            this.printTree(pRoot.getRight(), level + 1);
-            for (int i = 0; i < level; i++) {
-                System.out.print("   ");
-            }
-            System.out.println(pRoot.getData());
-            this.printTree(pRoot.getLeft(), level + 1);
-        }
-    }
-
-    public void printTree() {
-        this.printTree(this.root, 0);
-    }
-
     public boolean isLeaf(Node<T> pRoot) {
         return pRoot.getLeft() == null && pRoot.getRight() == null;
     }
@@ -397,5 +382,106 @@ public class BinarySearchTree<T> {
             return pRoot.getData() + "," + this.ancestros(pRoot.getRight(), data);
         }
     }
+
+
+    //verifica si dos arboles binarios tienen la misma estructura
+    public boolean sameStructure(BinarySearchTree<T> tree) {
+        return this.sameStructure(this.root, tree.root);
+    }
+
+    private boolean sameStructure(Node<T> pRoot1, Node<T> pRoot2) {
+        boolean result = true;
+
+        if (pRoot1 == null || pRoot2 == null) {
+            return false;
+        } else if ( (pRoot1.getLeft() != null || pRoot2.getLeft() != null) && result) {
+            result = this.sameStructure(pRoot1.getLeft(), pRoot2.getLeft());
+        } else if ( (pRoot1.getRight() != null || pRoot2.getRight() != null) && result) {
+            result = this.sameStructure(pRoot1.getRight(), pRoot2.getRight());
+        }
+        return result;
+    }
+
+    //verifica si dos arboles binarios tienen los mismos datos
+    public boolean sameData(BinarySearchTree<T> tree) {
+        return this.sameData(this.root, tree.root);
+    }
+
+    private boolean sameData(Node<T> pRoot1, Node<T> pRoot2) {
+        boolean result = true;
+
+        if (pRoot1 == null || pRoot2 == null) {
+            return false;
+        } else if (this.methods.areEqual(pRoot1.getData(), pRoot2.getData()) && result) {
+            result = this.sameData(pRoot1.getLeft(), pRoot2.getLeft());
+        } else if (this.methods.areEqual(pRoot1.getData(), pRoot2.getData()) && result) {
+            result = this.sameData(pRoot1.getRight(), pRoot2.getRight());
+        }
+        return result;
+    }
+
+    //verifica si dos arboles binarios son iguales
+    public boolean equals(BinarySearchTree<T> tree) {
+        return this.sameStructure(tree) && this.sameData(tree);
+    }
+
+    //verifica si un arbol binario es un subarbol de otro
+    public boolean isSubtree(BinarySearchTree<T> tree) {
+        return this.isSubtree(this.root, tree.root);
+    }
+
+    private boolean isSubtree(Node<T> pRoot1, Node<T> pRoot2) {
+        boolean result = false;
+
+        if (pRoot1 == null || pRoot2 == null) {
+            return false;
+        } else if (this.methods.areEqual(pRoot1.getData(), pRoot2.getData())) {
+            result = this.sameStructure(pRoot1, pRoot2) && this.sameData(pRoot1, pRoot2);
+        } else if (!result) {
+            result = this.isSubtree(pRoot1.getLeft(), pRoot2);
+        } else if (!result) {
+            result = this.isSubtree(pRoot1.getRight(), pRoot2);
+        }
+        return result;
+    }
+
+    //verifica si un arbol es espejo de otro
+    public boolean isMirror(BinarySearchTree<T> tree) {
+        return this.isMirror(this.root, tree.root);
+    }
+
+    private boolean isMirror(Node<T> pRoot1, Node<T> pRoot2) {
+        boolean result = true;
+
+        if (pRoot1 == null || pRoot2 == null) {
+            return false;
+        } else if (this.methods.areEqual(pRoot1.getData(), pRoot2.getData()) && result) {
+            result = this.isMirror(pRoot1.getLeft(), pRoot2.getRight());
+        } else if (this.methods.areEqual(pRoot1.getData(), pRoot2.getData()) && result) {
+            result = this.isMirror(pRoot1.getRight(), pRoot2.getLeft());
+        }
+        return result;
+    }
+
+    //Print the diagram of the tree
+    public void printTree() {
+        this.printTree(this.root, 0);
+    }
+
+    private void printTree(Node<T> pRoot, int level) {
+        if (pRoot != null) {
+            this.printTree(pRoot.getRight(), level + 1);
+            if (level != 0) {
+                for (int i = 0; i < level - 1; i++) {
+                    System.out.print("|\t");
+                }
+                System.out.println("|-------" + pRoot.getData());
+            } else {
+                System.out.println(pRoot.getData());
+            }
+            this.printTree(pRoot.getLeft(), level + 1);
+        }
+    }
+
 }
 

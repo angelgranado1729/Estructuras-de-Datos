@@ -469,6 +469,39 @@ public class BinaryTree<T> {
         return contains(this.root, data);
     }
 
+    public boolean isMirror(Node<T> pRoot1, Node<T> pRoot2) {
+        if (pRoot1 == null && pRoot2 == null) {
+            return true;
+        } else if (pRoot1 != null && pRoot2 != null) {
+            return this.util.areEqual(pRoot1.getData(), pRoot2.getData())
+                    && isMirror(pRoot1.getLeft(), pRoot2.getRight())
+                    && isMirror(pRoot1.getRight(), pRoot2.getLeft());
+        } else {
+            return false;
+        }
+    }
+
+    ////Print the diagram of the tree
+    public void printTree() {
+        this.printTree(this.root, 0);
+    }
+
+    private void printTree(Node<T> pRoot, int level) {
+        if (pRoot != null) {
+            this.printTree(pRoot.getRight(), level + 1);
+            if (level != 0) {
+                for (int i = 0; i < level - 1; i++) {
+                    System.out.print("|\t");
+                }
+                System.out.println("|-------" + pRoot.getData());
+            } else {
+                System.out.println(pRoot.getData());
+            }
+            this.printTree(pRoot.getLeft(), level + 1);
+        }
+    }
+
+
     
 
 
